@@ -1,0 +1,17 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "HealthCheckAPI\\HealthCheckAPI.csproj",
+        "Action": "Start",
+        "DebugTarget": "https"
+      },
+      {
+        "Path": "HealthCheck\\HealthCheck.esproj",
+        "Action": "Start",
+        "DebugTarget": "localhost (Chrome)"
+      }
+    ]
+  }
+]

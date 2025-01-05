@@ -75,7 +75,9 @@
           },
           "defaultConfiguration": "development",
           "options": {
-            "port": 51268
+            "port": 4200,
+            "browserTarget": "HealthCheck:build",
+            "proxyConfig": "src/proxy.conf.json"
           }
         },
         "extract-i18n": {
