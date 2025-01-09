@@ -82,7 +82,7 @@
           "defaultConfiguration": "development",
           "options": {
             "port": 4200,
-            "browserTarget": "HealthCheck:build",
+            "buildTarget": "HealthCheck:build",
             "proxyConfig": "src/proxy.conf.json"
           }
         },
