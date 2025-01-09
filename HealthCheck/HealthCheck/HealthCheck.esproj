@@ -8,7 +8,9 @@
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist\HealthCheck\browser\</BuildOutputFolder>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="src\app\NewFolder\" />
-    <Folder Include="src\NewFolder\" />
+    <None Remove="src\app\NewFolder\**" />
+    <None Remove="src\NewFolder\**" />
+    <TypeScriptConfiguration Remove="src\app\NewFolder\**" />
+    <TypeScriptConfiguration Remove="src\NewFolder\**" />
   </ItemGroup>
 </Project>

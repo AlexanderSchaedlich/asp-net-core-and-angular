@@ -26,10 +26,11 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('HealthCheck');
   });
 
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, HealthCheck');
-  });
+  // Test removed in Chapter 03 since the AppComponent doesn't render the app's title anymore.
+  //  it('should render title', () => {
+  //    const fixture = TestBed.createComponent(AppComponent);
+  //    fixture.detectChanges();
+  //    const compiled = fixture.nativeElement as HTMLElement;
+  //    expect(compiled.querySelector('h1')?.textContent).toContain('Weather forecast');
+  //  });
 });
