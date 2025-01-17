@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "WorldCitiesAPI\\WorldCitiesAPI.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "WorldCities\\WorldCities.esproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]
