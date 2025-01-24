@@ -10,19 +10,23 @@ import { CitiesComponent } from './cities/cities.component';
 import { provideHttpClient } from '@angular/common/http';
 import { AngularMaterialModule } from './angular-material.module';
 import { CountriesComponent } from './countries/countries.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { CityEditComponent } from './cities/city-edit.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    CitiesComponent,
+    CountriesComponent,
     HomeComponent,
     NavMenuComponent,
-    CitiesComponent,
-    CountriesComponent
+    CityEditComponent,
   ],
   imports: [
-    BrowserModule,
+    AngularMaterialModule,
     AppRoutingModule,
-    AngularMaterialModule
+    BrowserModule,
+    ReactiveFormsModule,
   ],
   providers: [
     provideAnimationsAsync(),

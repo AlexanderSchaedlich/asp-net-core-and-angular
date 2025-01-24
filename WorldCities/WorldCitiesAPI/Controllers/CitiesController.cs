@@ -108,5 +108,18 @@ namespace WorldCitiesAPI.Controllers
         {
             return _context.Cities.Any(e => e.Id == id);
         }
+
+        [HttpPost]
+        [Route("CityIsDuplicate")]
+        public bool CityIsDuplicate(City city)
+        {
+            return _context.Cities.Any(
+                e => e.Name == city.Name
+                && e.Lat == city.Lat
+                && e.Lon == city.Lon
+                && e.CountryId == city.CountryId
+                && e.Id != city.Id
+            );
+        }
     }
 }

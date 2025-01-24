@@ -34,7 +34,7 @@ export class CitiesComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getData();
+    this.readData();
   }
 
   public tryFilteringByColumn(column: string): void {
@@ -44,7 +44,7 @@ export class CitiesComponent implements OnInit {
       return;
     }
 
-    this.getData();
+    this.readData();
   }
 
   public tryFilteringByValue(value: string): void {
@@ -52,7 +52,7 @@ export class CitiesComponent implements OnInit {
       ? value.trim()
       : undefined;
 
-    this.getData();
+    this.readData();
   }
 
   public sortData(sort: Sort): void {
@@ -63,18 +63,18 @@ export class CitiesComponent implements OnInit {
     this.sortColumn = sort.active;
     this.sortOrder = sort.direction;
 
-    this.getData();
+    this.readData();
   }
 
   public handlePageEvent(event: PageEvent): void {
     this.pageSize = event.pageSize;
     this.pageIndex = event.pageIndex;
 
-    this.getData();
+    this.readData();
   }
 
-  private getData(): void {
-    this.requestHandler.getCities(this.getParams()).subscribe({
+  private readData(): void {
+    this.requestHandler.readCities(this.getParams()).subscribe({
         next: responseObject => {
           this.dataSource.data = responseObject.cities;
           this.length = responseObject.totalCount;
@@ -86,15 +86,15 @@ export class CitiesComponent implements OnInit {
   private getParams(): HttpParams {
     return new HttpParams({
       fromObject: {
-        'pageIndex': this.pageIndex.toString(),
-        'pageSize': this.pageSize.toString(),
+        pageIndex: this.pageIndex.toString(),
+        pageSize: this.pageSize.toString(),
         ...this.filterValue && {
-          'filterColumn': this.filterColumn,
-          'filterValue': this.filterValue,
+          filterColumn: this.filterColumn,
+          filterValue: this.filterValue,
         },
         ...this.sortColumn && {
-          'sortColumn': this.sortColumn,
-          'sortOrder': this.sortOrder,
+          sortColumn: this.sortColumn,
+          sortOrder: this.sortOrder,
         },
       }
     });
