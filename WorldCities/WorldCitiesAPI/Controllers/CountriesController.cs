@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Extensions;
 using WorldCitiesAPI.Data;
 using WorldCitiesAPI.Data.Models;
 
@@ -113,6 +116,22 @@ namespace WorldCitiesAPI.Controllers
         private bool CountryExists(int id)
         {
             return _context.Countries.Any(e => e.Id == id);
+        }
+
+        // POST: api/Countries/FieldIsDuplicate
+        [HttpPost]
+        [Route("FieldIsDuplicate")]
+        public bool IsFieldDuplicate(
+            string fieldName,
+            string fieldValue)
+        {
+            return fieldName switch
+            {
+                "name" => _context.Countries.Any(country => country.Name == fieldValue),
+                "iso2" => _context.Countries.Any(country => country.ISO2 == fieldValue),
+                "iso3" => _context.Countries.Any(country => country.ISO3 == fieldValue),
+                _ => false,
+            };
         }
     }
 }
