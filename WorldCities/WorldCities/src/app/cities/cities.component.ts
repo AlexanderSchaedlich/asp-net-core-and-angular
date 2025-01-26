@@ -5,6 +5,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 import { City } from '../models';
 import { RequestHandlerService } from '../services/request-handler.service';
+import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-cities',
@@ -12,6 +13,8 @@ import { RequestHandlerService } from '../services/request-handler.service';
   styleUrls: ['./cities.component.scss']
 })
 export class CitiesComponent implements OnInit {
+  private filterValueChanged: Subject<string> = new Subject();
+
   public dataSource: MatTableDataSource<City> = new MatTableDataSource();
   public length: number = 0;
 
@@ -47,7 +50,21 @@ export class CitiesComponent implements OnInit {
     this.readData();
   }
 
-  public tryFilteringByValue(value: string): void {
+  public onFilterValueChanged(value: string): void {
+    if (!this.filterValueChanged.observed) {
+      this.filterValueChanged.pipe(
+        debounceTime(300),
+        distinctUntilChanged()
+      ).subscribe({
+        next: currentValue => this.filterByValue(currentValue),
+        error: error => console.error(error)
+      });
+    }
+
+    this.filterValueChanged.next(value);
+  }
+
+  public filterByValue(value: string): void {
     this.filterValue = value.trim() !== ''
       ? value.trim()
       : undefined;

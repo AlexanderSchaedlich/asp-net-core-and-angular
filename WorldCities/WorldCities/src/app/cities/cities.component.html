@@ -22,7 +22,7 @@
 
 <mat-form-field [hidden]="!length">
   <mat-label>Value</mat-label>
-  <input matInput #filterValueInput (keyup)="tryFilteringByValue(filterValueInput.value)" placeholder="Enter filtering value" />
+  <input matInput #filterValueInput (keyup)="onFilterValueChanged(filterValueInput.value)" placeholder="Enter filtering value" />
 </mat-form-field>
 
 <table mat-table
