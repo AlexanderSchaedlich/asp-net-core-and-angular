@@ -3,6 +3,11 @@
 <p>Here's a list of cities: feel free to play with it.</p>
 
 <p *ngIf="!length"><em>Loading...</em></p>
+
+<button mat-flat-button color="primary" class="btn-add" [routerLink]="['/city']">
+  Add a new City
+</button>
+
 <p *ngIf="length">Filter by column and value</p>
 
 <mat-form-field [hidden]="!length" class="filter-column-input">
@@ -17,7 +22,7 @@
 
 <mat-form-field [hidden]="!length">
   <mat-label>Value</mat-label>
-  <input matInput #filterValueInput (keyup)="tryFilteringByValue(filterValueInput.value)" placeholder="Enter filtering value" />
+  <input matInput #filterValueInput (keyup)="onFilterValueChanged(filterValueInput.value)" placeholder="Enter filtering value" />
 </mat-form-field>
 
 <table mat-table
@@ -32,7 +37,9 @@
   </ng-container>
   <ng-container matColumnDef="name">
     <th mat-header-cell mat-sort-header *matHeaderCellDef>Name</th>
-    <td mat-cell *matCellDef="let city">{{city.name}}</td>
+    <td mat-cell *matCellDef="let city">
+      <a [routerLink]="['/city', city.id]">{{city.name}}</a>
+    </td>
   </ng-container>
   <ng-container matColumnDef="lat">
     <th mat-header-cell mat-sort-header *matHeaderCellDef>Latitude</th>
