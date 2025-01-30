@@ -1,21 +1,21 @@
 import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, Validators, AsyncValidatorFn, AbstractControl, FormBuilder } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, map } from 'rxjs';
 import { Country } from '../models';
 import { RequestHandlerService } from '../services/request-handler.service';
+import { BaseFormComponent } from '../base-form.component';
 
 @Component({
   selector: 'app-country-edit',
   templateUrl: './country-edit.component.html',
   styleUrl: './country-edit.component.scss'
 })
-export class CountryEditComponent implements OnInit {
+export class CountryEditComponent extends BaseFormComponent implements OnInit {
   public title?: string;
   private createCountryTitle: string = 'Create a new Country';
   private updateCountryTitle: string = 'Edit country $';
-  public form!: FormGroup;
   public country?: Country;
   // 0 when creating a country
   // ID when updating a country
@@ -29,6 +29,7 @@ export class CountryEditComponent implements OnInit {
     private router: Router,
     private requestHandler: RequestHandlerService,
     private formBuilder: FormBuilder) {
+    super();
   }
 
   ngOnInit() {

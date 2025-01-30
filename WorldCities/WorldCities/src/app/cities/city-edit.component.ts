@@ -6,17 +6,17 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { City, Country } from '../models';
 import { RequestHandlerService } from '../services/request-handler.service';
+import { BaseFormComponent } from '../base-form.component';
 
 @Component({
   selector: 'app-city-edit',
   templateUrl: './city-edit.component.html',
   styleUrls: ['./city-edit.component.scss']
 })
-export class CityEditComponent implements OnInit {
+export class CityEditComponent extends BaseFormComponent implements OnInit {
   public title?: string;
   private createCityTitle: string = 'Create a new City';
   private updateCityTitle: string = 'Edit city $';
-  public form!: FormGroup;
   public city?: City;
   // 0 when creating a city
   // ID when updating a city
@@ -31,14 +31,21 @@ export class CityEditComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private requestHandler: RequestHandlerService) {
+    super();
   }
 
   ngOnInit() {
     this.form = new FormGroup(
       {
         name: new FormControl('', Validators.required),
-        lat: new FormControl('', Validators.required),
-        lon: new FormControl('', Validators.required),
+        lat: new FormControl('', [
+          Validators.required,
+          Validators.pattern(/^[-]?[0-9]+(\.[0-9]{1,4})?$/)
+        ]),
+        lon: new FormControl('', [
+          Validators.required,
+          Validators.pattern(/^[-]?[0-9]+(\.[0-9]{1,4})?$/)
+        ]),
         countryId: new FormControl('', Validators.required)
       },
       null,
