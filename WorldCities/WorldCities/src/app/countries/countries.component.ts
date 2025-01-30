@@ -22,7 +22,8 @@ export class CountriesComponent implements OnInit {
     'id',
     'name',
     'iso2',
-    'iso3'
+    'iso3',
+    'numberOfCities'
   ];
 
   public filterColumn: string = this.columns[1];

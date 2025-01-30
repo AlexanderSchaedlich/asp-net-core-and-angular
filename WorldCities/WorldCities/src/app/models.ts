@@ -4,6 +4,7 @@ export interface City {
   lat: number;
   lon: number;
   countryId: number;
+  countryName: string;
 }
 
 export interface Country {
@@ -11,6 +12,7 @@ export interface Country {
   name: string;
   iso2: string;
   iso3: string;
+  numberOfCities: number;
 }
 
 export interface GetCitiesResponseObject {

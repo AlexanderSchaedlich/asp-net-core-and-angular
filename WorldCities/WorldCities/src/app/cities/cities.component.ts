@@ -22,7 +22,8 @@ export class CitiesComponent implements OnInit {
     'id',
     'name',
     'lat',
-    'lon'
+    'lon',
+    'countryName'
   ];
 
   public filterColumn: string = this.columns[1];

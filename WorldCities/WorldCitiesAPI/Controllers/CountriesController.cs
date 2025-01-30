@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Extensions;
 using WorldCitiesAPI.Data;
 using WorldCitiesAPI.Data.Models;
 
@@ -21,7 +18,7 @@ namespace WorldCitiesAPI.Controllers
 
         // GET: api/Countries
         [HttpGet]
-        public async Task<ActionResult<CountriesApiResult<Country>>> GetCities(
+        public async Task<ActionResult<CountriesApiResult<CountryDTO>>> GetCities(
             int pageIndex = 0,
             int pageSize = 10,
             string? filterColumn = null,
@@ -31,8 +28,15 @@ namespace WorldCitiesAPI.Controllers
 
         )
         {
-            return await CountriesApiResult<Country>.CreateAsync(
-                _context.Countries.AsNoTracking(),
+            return await CountriesApiResult<CountryDTO>.CreateAsync(
+                _context.Countries.AsNoTracking()
+                    .Select(country => new CountryDTO(){
+                        Id = country.Id,
+                        Name = country.Name,
+                        ISO2 = country.ISO2,
+                        ISO3 = country.ISO3,
+                        NumberOfCities = country.Cities!.Count(),
+                    }),
                 pageIndex,
                 pageSize,
                 filterColumn,

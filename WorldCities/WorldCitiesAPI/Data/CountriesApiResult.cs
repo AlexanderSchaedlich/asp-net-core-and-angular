@@ -48,8 +48,8 @@ namespace WorldCitiesAPI.Data
         /// and all the relevant paging/sorting/filtering navigation
         /// info.
         /// </returns>
-        public static async Task<CountriesApiResult<Country>> CreateAsync(
-            IQueryable<Country> source,
+        public static async Task<CountriesApiResult<CountryDTO>> CreateAsync(
+            IQueryable<CountryDTO> source,
             int pageIndex,
             int pageSize,
             string? filterColumn = null,
@@ -69,7 +69,7 @@ namespace WorldCitiesAPI.Data
 
             var countries = await source.ToListAsync();
 
-            return new CountriesApiResult<Country>(
+            return new CountriesApiResult<CountryDTO>(
                 countries,
                 count
             );
@@ -94,8 +94,8 @@ namespace WorldCitiesAPI.Data
             return prop != null;
         }
 
-        private static IQueryable<Country> Filter(
-            IQueryable<Country> source,
+        private static IQueryable<CountryDTO> Filter(
+            IQueryable<CountryDTO> source,
             string? filterColumn = null,
             string? filterValue = null
         )
@@ -120,8 +120,8 @@ namespace WorldCitiesAPI.Data
             };
         }
 
-        private static IQueryable<Country> Sort(
-            IQueryable<Country> source,
+        private static IQueryable<CountryDTO> Sort(
+            IQueryable<CountryDTO> source,
             string? sortColumn = null,
             string? sortOrder = null
         )
