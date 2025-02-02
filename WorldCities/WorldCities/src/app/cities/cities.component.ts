@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpParams } from '@angular/common/http';
 import { MatTableDataSource } from '@angular/material/table';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 import { City } from '../models';
-import { RequestHandlerService } from '../services/request-handler.service';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { CityService } from './city.service';
 
 @Component({
   selector: 'app-cities',
@@ -22,7 +21,8 @@ export class CitiesComponent implements OnInit {
     'id',
     'name',
     'lat',
-    'lon'
+    'lon',
+    'countryName'
   ];
 
   public filterColumn: string = this.columns[1];
@@ -33,7 +33,7 @@ export class CitiesComponent implements OnInit {
   public pageSize: number = this.pageSizeOptions[0];
   public pageIndex: number = 0;
 
-  constructor(private requestHandler: RequestHandlerService) {
+  constructor(private cityService: CityService) {
   }
 
   ngOnInit() {
@@ -91,29 +91,12 @@ export class CitiesComponent implements OnInit {
   }
 
   private readData(): void {
-    this.requestHandler.readCities(this.getParams()).subscribe({
+    this.cityService.readItems(this.pageSize, this.pageIndex, this.sortColumn, this.sortOrder, this.filterColumn, this.filterValue).subscribe({
         next: responseObject => {
           this.dataSource.data = responseObject.cities;
           this.length = responseObject.totalCount;
         },
         error: error => console.error(error)
-    });
-  }
-
-  private getParams(): HttpParams {
-    return new HttpParams({
-      fromObject: {
-        pageIndex: this.pageIndex.toString(),
-        pageSize: this.pageSize.toString(),
-        ...this.filterValue && {
-          filterColumn: this.filterColumn,
-          filterValue: this.filterValue,
-        },
-        ...this.sortColumn && {
-          sortColumn: this.sortColumn,
-          sortOrder: this.sortOrder,
-        },
-      }
     });
   }
 }
