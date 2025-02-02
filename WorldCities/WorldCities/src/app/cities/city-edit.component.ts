@@ -5,8 +5,9 @@ import { FormGroup, FormControl, Validators, AbstractControl, AsyncValidatorFn }
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { City, Country } from '../models';
-import { RequestHandlerService } from '../services/request-handler.service';
 import { BaseFormComponent } from '../base-form.component';
+import { CityService } from './city.service';
+import { CountryService } from '../countries/country.service';
 
 @Component({
   selector: 'app-city-edit',
@@ -25,12 +26,13 @@ export class CityEditComponent extends BaseFormComponent implements OnInit {
   private createCitySuccessMessage: string = 'City with the ID $ has been created.';
   private updateCitySuccessMessage: string = 'City with the ID $ has been updated.';
   public countries: Country[] = [];
-  private countriesPageSize: string = '9999';
+  private countriesPageSize: number = 9999;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private requestHandler: RequestHandlerService) {
+    private cityService: CityService,
+    private countryService: CountryService) {
     super();
   }
 
@@ -64,7 +66,7 @@ export class CityEditComponent extends BaseFormComponent implements OnInit {
       return;
     }
 
-    this.requestHandler.readCity(this.id).subscribe({
+    this.cityService.readItem(this.id).subscribe({
       next: city => {
         this.title = this.updateCityTitle.replace('$', city.name);
         this.city = city;
@@ -81,7 +83,7 @@ export class CityEditComponent extends BaseFormComponent implements OnInit {
       }
     });
 
-    this.requestHandler.readCountries(params).subscribe({
+    this.countryService.readItems(this.countriesPageSize).subscribe({
       next: responseObject => {
         this.countries = responseObject.countries;
       },
@@ -91,7 +93,7 @@ export class CityEditComponent extends BaseFormComponent implements OnInit {
 
   private isDuplicate(): AsyncValidatorFn {
     return (control: AbstractControl): Observable<{ [key: string]: any } | null> => {
-      return this.requestHandler.isCityDuplicate(this.getCityFromFormControls(true)).pipe(map(
+      return this.cityService.isItemDuplicate(this.getCityFromFormControls()).pipe(map(
         isDuplicate => isDuplicate
           ? { isCityDuplicate: true }
           : null
@@ -99,11 +101,9 @@ export class CityEditComponent extends BaseFormComponent implements OnInit {
     }
   }
 
-  private getCityFromFormControls(setId: boolean): City {
+  private getCityFromFormControls(): City {
     return <City>{
-      ...setId && {
-        id: this.id
-      },
+      id: this.id,
       name: this.form.controls['name'].value,
       lat: +this.form.controls['lat'].value,
       lon: +this.form.controls['lon'].value,
@@ -112,7 +112,7 @@ export class CityEditComponent extends BaseFormComponent implements OnInit {
   }
 
   onSubmit() {
-    this.city = this.getCityFromFormControls(!this.isCityBeingCreated);
+    this.city = this.getCityFromFormControls();
 
     this.isCityBeingCreated
       ? this.createCity()
@@ -124,7 +124,7 @@ export class CityEditComponent extends BaseFormComponent implements OnInit {
       return;
     }
 
-    this.requestHandler.createCity(this.city).subscribe({
+    this.cityService.createItem(this.city).subscribe({
       next: city => {
         console.log(this.createCitySuccessMessage.replace('$', city.id.toString()));
         this.router.navigate(['/cities']);
@@ -138,7 +138,7 @@ export class CityEditComponent extends BaseFormComponent implements OnInit {
       return;
     }
 
-    this.requestHandler.updateCity(this.id, this.city).subscribe({
+    this.cityService.updateItem(this.city).subscribe({
       next: noContent => {
         console.log(this.updateCitySuccessMessage.replace('$', this.city?.id.toString() ?? ''));
         this.router.navigate(['/cities']);

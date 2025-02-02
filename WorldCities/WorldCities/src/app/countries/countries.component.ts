@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpParams } from '@angular/common/http';
 import { MatTableDataSource } from '@angular/material/table';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 import { Country } from '../models';
-import { RequestHandlerService } from '../services/request-handler.service';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { CountryService } from './country.service';
 
 @Component({
   selector: 'app-countries',
@@ -34,7 +33,7 @@ export class CountriesComponent implements OnInit {
   public pageSize: number = this.pageSizeOptions[0];
   public pageIndex: number = 0;
 
-  constructor(private requestHandler: RequestHandlerService) {
+  constructor(private countryService: CountryService) {
   }
 
   ngOnInit() {
@@ -92,29 +91,12 @@ export class CountriesComponent implements OnInit {
   }
 
   private readData(): void {
-    this.requestHandler.readCountries(this.getParams()).subscribe({
+    this.countryService.readItems(this.pageSize, this.pageIndex, this.sortColumn, this.sortOrder, this.filterColumn, this.filterValue).subscribe({
       next: responseObject => {
         this.dataSource.data = responseObject.countries;
         this.length = responseObject.totalCount;
       },
       error: error => console.error(error)
-    });
-  }
-
-  private getParams(): HttpParams {
-    return new HttpParams({
-      fromObject: {
-        pageIndex: this.pageIndex.toString(),
-        pageSize: this.pageSize.toString(),
-        ...this.filterValue && {
-          filterColumn: this.filterColumn,
-          filterValue: this.filterValue,
-        },
-        ...this.sortColumn && {
-          sortColumn: this.sortColumn,
-          sortOrder: this.sortOrder,
-        },
-      }
     });
   }
 }
