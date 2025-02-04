@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Reflection;
-using WorldCitiesAPI.Data.Models;
 
 namespace WorldCitiesAPI.Data
 {
@@ -83,7 +82,7 @@ namespace WorldCitiesAPI.Data
             string propertyName,
             bool throwExceptionIfNotFound = true)
         {
-            var prop = typeof(City).GetProperty(
+            var prop = typeof(CityDTO).GetProperty(
                 propertyName,
                 BindingFlags.IgnoreCase |
                 BindingFlags.Public |
