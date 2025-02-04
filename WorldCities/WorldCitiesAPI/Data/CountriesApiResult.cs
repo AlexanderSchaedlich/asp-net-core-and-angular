@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Reflection;
-using WorldCitiesAPI.Data.Models;
 
 namespace WorldCitiesAPI.Data
 {
@@ -83,7 +82,7 @@ namespace WorldCitiesAPI.Data
             string propertyName,
             bool throwExceptionIfNotFound = true)
         {
-            var prop = typeof(Country).GetProperty(
+            var prop = typeof(CountryDTO).GetProperty(
                 propertyName,
                 BindingFlags.IgnoreCase |
                 BindingFlags.Public |
@@ -137,14 +136,16 @@ namespace WorldCitiesAPI.Data
 
             return $"{sortColumn}{sortOrder}" switch
             {
-                "id" => source.OrderBy(city => city.Id),
-                "id_desc" => source.OrderByDescending(city => city.Id),
-                "name" => source.OrderBy(city => city.Name),
-                "name_desc" => source.OrderByDescending(city => city.Name),
-                "iso2" => source.OrderBy(city => city.ISO2),
-                "iso2_desc" => source.OrderByDescending(city => city.ISO2),
-                "iso3" => source.OrderBy(city => city.ISO3),
-                "iso3_desc" => source.OrderByDescending(city => city.ISO3),
+                "id" => source.OrderBy(country => country.Id),
+                "id_desc" => source.OrderByDescending(country => country.Id),
+                "name" => source.OrderBy(country => country.Name),
+                "name_desc" => source.OrderByDescending(country => country.Name),
+                "iso2" => source.OrderBy(country => country.ISO2),
+                "iso2_desc" => source.OrderByDescending(country => country.ISO2),
+                "iso3" => source.OrderBy(country => country.ISO3),
+                "iso3_desc" => source.OrderByDescending(country => country.ISO3),
+                "numberOfCities" => source.OrderBy(country => country.NumberOfCities),
+                "numberOfCities_desc" => source.OrderByDescending(country => country.NumberOfCities),
                 _ => source,
             };
         }
