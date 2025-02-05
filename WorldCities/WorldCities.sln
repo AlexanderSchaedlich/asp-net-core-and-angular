@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35514.174 d17.12
+VisualStudioVersion = 17.12.35514.174
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "WorldCities", "WorldCities\WorldCities.esproj", "{395BC0F7-079E-4713-9A51-4420D95BD06E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorldCitiesAPI", "WorldCitiesAPI\WorldCitiesAPI.csproj", "{46AE288C-6D92-4BE9-8FE3-1EA5923B0E9D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorldCitiesAPI.Tests", "WorldCitiesAPI.Tests\WorldCitiesAPI.Tests.csproj", "{C706211F-8649-4CE1-862E-16011A948412}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,6 +25,10 @@ Global
 		{46AE288C-6D92-4BE9-8FE3-1EA5923B0E9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46AE288C-6D92-4BE9-8FE3-1EA5923B0E9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{46AE288C-6D92-4BE9-8FE3-1EA5923B0E9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C706211F-8649-4CE1-862E-16011A948412}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C706211F-8649-4CE1-862E-16011A948412}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C706211F-8649-4CE1-862E-16011A948412}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C706211F-8649-4CE1-862E-16011A948412}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
