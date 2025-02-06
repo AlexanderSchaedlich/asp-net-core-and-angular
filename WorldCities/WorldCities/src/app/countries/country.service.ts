@@ -48,12 +48,12 @@ export class CountryService
   }
 
   public isFieldDuplicate(
-    filterName: string,
-    filterValue: string
+    fieldName: string,
+    fieldValue: string
   ): Observable<boolean> {
     const params = new HttpParams()
-      .set('filterName', filterName)
-      .set('filterValue', filterValue);
+      .set('fieldName', fieldName)
+      .set('fieldValue', fieldValue);
     ;
     return this.http.post<boolean>(`${environment.baseUrl}api/Countries/FieldIsDuplicate`, null, { params });
   }
