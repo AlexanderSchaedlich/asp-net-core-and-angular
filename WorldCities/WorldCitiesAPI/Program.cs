@@ -7,6 +7,7 @@ using WorldCitiesAPI.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Cors;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +37,14 @@ builder.Services.AddControllers()
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddCors(options =>
+    options.AddPolicy(name: "AngularPolicy",
+        cfg => {
+            cfg.AllowAnyHeader();
+            cfg.AllowAnyMethod();
+            cfg.WithOrigins(builder.Configuration["AllowedCORS"]);
+        }));
 
 // Add ApplicationDbContext and SQL Server support
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -74,7 +83,7 @@ builder.Services.AddAuthentication(opt =>
         ValidAudience = builder.Configuration["JwtSettings:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(
             System.Text.Encoding.UTF8.GetBytes(
-                builder.Configuration["JwtSettings:SecurityKey"]!))
+                builder.Configuration["JwtSettings:SecurityKey"]))
     };
 });
 
@@ -96,6 +105,11 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseCors("AngularPolicy");
+
 app.MapControllers();
+
+app.MapMethods("/api/heartbeat", new[] { "HEAD" },
+    () => Results.Ok());
 
 app.Run();
