@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { BaseHTTPService } from '../base-http.service';
 import { City, GetCitiesResponseObject } from '../models';
 import { environment } from '../../environments/environment';
+import { Apollo, gql } from 'apollo-angular';
 
 @Injectable({
   providedIn: 'root',
@@ -11,36 +12,126 @@ import { environment } from '../../environments/environment';
 export class CityService
   extends BaseHTTPService<City> {
   constructor(
-    http: HttpClient) {
+    http: HttpClient,
+    private apollo: Apollo) {
     super(http);
   }
 
-  public createItem(city: City): Observable<City> {
-    return this.http.post<City>(`${environment.baseUrl}api/Cities`, city);
-  }
-
   public readItem(id: number): Observable<City> {
-    return this.http.get<City>(`${environment.baseUrl}api/Cities/${id}`);
+    return this.apollo
+      .query({
+        query: gql`
+          query GetCityById($id: Int!) {
+            cities(where: { id: { eq: $id } }) {
+              nodes {
+                id
+                name
+                lat
+                lon
+                countryId
+              }
+            }
+          }
+        `,
+        variables: {
+          id
+        }
+      })
+      .pipe(map((result: any) =>
+        result.data.cities.nodes[0]));
   }
 
-  readItems(
+  public readItems(
     pageSize: number,
-    pageIndex?: number,
-    sortColumn?: string,
-    sortOrder?: string,
-    filterColumn?: string,
-    filterValue?: string
+    pageIndex: number = 0,
+    sortColumn: string = '',
+    sortOrder: string = '',
+    filterColumn: string = '',
+    filterQuery: string = ''
   ): Observable<GetCitiesResponseObject> {
-    return this.http.get<GetCitiesResponseObject>(
-      `${environment.baseUrl}api/Cities`,
-      {
-        params: this.getReducedParams(pageSize, pageIndex, sortColumn, sortOrder, filterColumn, filterValue)
-      }
-    );
+    console.log(filterQuery);
+    return this.apollo
+      .query({
+        query: gql`
+          query GetCitiesApiResult(
+              $pageIndex: Int!,
+              $pageSize: Int!,
+              $sortColumn: String,
+              $sortOrder: String,
+              $filterColumn: String,
+              $filterQuery: String) {
+            citiesApiResult(
+              pageIndex: $pageIndex
+              pageSize: $pageSize
+              filterColumn: $filterColumn
+              filterQuery: filterQuery
+              sortColumn: $sortColumn
+              sortOrder: $sortOrder
+            ) { 
+               cities { 
+                 id
+                 name
+                 lat 
+                 lon
+                 countryId
+                 countryName 
+               }
+              }
+          }
+        `,
+        variables: {
+          pageIndex,
+          pageSize,
+          filterColumn,
+          filterQuery,
+          sortColumn,
+          sortOrder
+        }
+      })
+      .pipe(map((result: any) =>
+        result.data.citiesApiResult));
   }
 
-  public updateItem(city: City): Observable<Response> {
-    return this.http.put<Response>(`${environment.baseUrl}api/Cities/${city.id}`, city);
+  public updateItem(input: City): Observable<Response> {
+    return this.apollo
+      .mutate({
+        mutation: gql`
+          mutation UpdateCity($city: CityDTOInput!) {
+            updateCity(cityDTO: $city) { 
+              id
+              name
+              lat
+              lon
+              countryId
+            }
+          }
+        `,
+        variables: {
+          city: input
+        }
+      }).pipe(map((result: any) =>
+        result.data.updateCity));
+  }
+
+  public createItem(item: City): Observable<City> {
+    return this.apollo
+      .mutate({
+        mutation: gql`
+          mutation AddCity($city: CityDTOInput!) {
+            addCity(cityDTO: $city) { 
+              id 
+              name
+              lat
+              lon
+              countryId
+            }
+          }
+        `,
+        variables: {
+          city: item
+        }
+      }).pipe(map((result: any) =>
+        result.data.addCity));
   }
 
   public isItemDuplicate(city: City): Observable<boolean> {
