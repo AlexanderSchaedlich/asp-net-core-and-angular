@@ -91,6 +91,7 @@ export class CitiesComponent implements OnInit {
   }
 
   private readData(): void {
+    console.log(this.filterValue);
     this.cityService.readItems(this.pageSize, this.pageIndex, this.sortColumn, this.sortOrder, this.filterColumn, this.filterValue).subscribe({
         next: responseObject => {
           this.dataSource.data = responseObject.cities;

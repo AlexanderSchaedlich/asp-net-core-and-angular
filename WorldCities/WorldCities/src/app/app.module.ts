@@ -18,6 +18,8 @@ import { AuthInterceptor } from './auth/auth.interceptor';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { ConnectionServiceModule, ConnectionServiceOptions, ConnectionServiceOptionsToken } from 'angular-connection-service';
 import { environment } from '../environments/environment';
+import { HttpLink, InMemoryCache } from '@apollo/client/core';
+import { provideApollo } from 'apollo-angular';
 
 @NgModule({
   declarations: [
@@ -46,6 +48,22 @@ import { environment } from '../environments/environment';
   providers: [
     provideAnimationsAsync(),
     provideHttpClient(),
+    provideApollo(
+      () => {
+        return {
+          cache: new InMemoryCache({
+            addTypename: false
+          }),
+          link: new HttpLink({
+            uri: environment.baseUrl + 'api/graphql',
+          }),
+          defaultOptions: {
+            watchQuery: { fetchPolicy: 'no-cache' },
+            query: { fetchPolicy: 'no-cache' }
+          }
+        };
+      }
+    ),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
@@ -56,7 +74,7 @@ import { environment } from '../environments/environment';
       useValue: <ConnectionServiceOptions>{
         heartbeatUrl: environment.baseUrl + 'api/heartbeat',
       }
-    }
+    },
   ],
   bootstrap: [AppComponent]
 })
